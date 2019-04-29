@@ -9,11 +9,7 @@
     <Import_RootNamespace>TwitchIntegration.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Sandbox\ChatMessage.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PipeSecurity.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sandbox\ProcessManager.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Sandbox\" />
+    <Compile Include="$(MSBuildThisFileDirectory)ChatMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProcessManager.cs" />
   </ItemGroup>
 </Project>
