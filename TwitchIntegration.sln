@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.156
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchIntegration", "TwitchIntegration\TwitchIntegration.csproj", "{A64A91AF-E9AD-402C-A00D-F527D7CFDD5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchIntegration.Host", "TwitchIntegration.Host\TwitchIntegration.Host.csproj", "{3F837149-834E-4D00-8137-984E40D25CEF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "References", "References", "{DADA3015-8D80-4E8A-9DF3-EA121857C282}"
+	ProjectSection(SolutionItems) = preProject
+		References\TwitchLib.Unity.dll = References\TwitchLib.Unity.dll
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchIntegration.Sandbox", "TwitchIntegration.Sandbox\TwitchIntegration.Sandbox.csproj", "{A825814A-91D8-48BD-82C5-A92E9867174A}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TwitchIntegration.Shared", "TwitchIntegration.Shared\TwitchIntegration.Shared.shproj", "{EAC9F73D-5672-4A27-ACF0-60C431608823}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		TwitchIntegration.Shared\TwitchIntegration.Shared.projitems*{3f837149-834e-4d00-8137-984e40d25cef}*SharedItemsImports = 4
+		TwitchIntegration.Shared\TwitchIntegration.Shared.projitems*{a64a91af-e9ad-402c-a00d-f527d7cfdd5c}*SharedItemsImports = 4
+		TwitchIntegration.Shared\TwitchIntegration.Shared.projitems*{a825814a-91d8-48bd-82c5-a92e9867174a}*SharedItemsImports = 4
+		TwitchIntegration.Shared\TwitchIntegration.Shared.projitems*{eac9f73d-5672-4a27-acf0-60c431608823}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A64A91AF-E9AD-402C-A00D-F527D7CFDD5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A64A91AF-E9AD-402C-A00D-F527D7CFDD5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A64A91AF-E9AD-402C-A00D-F527D7CFDD5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A64A91AF-E9AD-402C-A00D-F527D7CFDD5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F837149-834E-4D00-8137-984E40D25CEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F837149-834E-4D00-8137-984E40D25CEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F837149-834E-4D00-8137-984E40D25CEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F837149-834E-4D00-8137-984E40D25CEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A825814A-91D8-48BD-82C5-A92E9867174A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A825814A-91D8-48BD-82C5-A92E9867174A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A825814A-91D8-48BD-82C5-A92E9867174A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A825814A-91D8-48BD-82C5-A92E9867174A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EB4D2EA9-05DA-445A-9C29-73E0BB9394AD}
+	EndGlobalSection
+EndGlobal
