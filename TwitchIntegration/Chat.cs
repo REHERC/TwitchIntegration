@@ -6,26 +6,31 @@ namespace TwitchIntegration
 {
     public static class Chat
     {
-        public static string Messages = "";
-
         public static void OnMessageReceived(ChatMessage m)
         {
             MessageQueue.Queue.Enqueue(m);
             string message = $"{m.DisplayName}: {m.Message}";
             Plugin.Log.Info(message);
-            SetMessages();
         }
 
-        public static void SetMessages()
+        public static string GetMessages(int max = 22)
         {
             string msg = "";
             for (int i = 0; i < Math.Min(15, MessageQueue.Queue.Count); i++)
             {
                 if (i > 0)
-                    msg += "\n";
-                msg += MessageQueue.Queue.ElementAt(i).ToString();
+                {
+                    /*msg += !msg.EndsWith("\n") ? "\n" : string.Empty;*/ msg+= "\n";
+                }
+                msg += StringExtensions.WordWrap(MessageQueue.Queue.ElementAt(i).ToString(), max);
             }
-            Messages = msg;
+
+            //while (msg.Contains("\n\n"))
+            //{
+            //    msg = msg.Replace("\n\n", "\n");
+            //}
+
+            return msg;
         }
 
         public static readonly string[] FormattingTags = new string[] {

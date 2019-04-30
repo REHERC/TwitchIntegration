@@ -41,8 +41,12 @@ namespace TwitchIntegration.Harmony
 
                 logic.errorText_.gameObject.SetActive(true);
                 logic.errorText_.enabled = true;
-
-                logic.errorText_.textMesh_.text = Chat.WordWrap(Chat.Messages, 22);
+                try
+                {
+                    logic.errorText_.textMesh_.text = Chat.GetMessages();
+                } catch (Exception e) {
+                    Plugin.Log.Exception(e);
+                }
                 //TODO: make font smaller
                 logic.errorText_.textMesh_.fontSize = 24;
             }
