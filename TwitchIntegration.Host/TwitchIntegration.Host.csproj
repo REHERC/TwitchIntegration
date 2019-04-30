@@ -80,4 +80,8 @@ ECHO &gt;%25TARGET%25
 XCOPY /Y /K %25SOURCE%25 %25TARGET%25
 POPD</PostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>taskkill /im TwitchIntegration.Host.exe /t /f
+exit 0</PreBuildEvent>
+  </PropertyGroup>
 </Project>

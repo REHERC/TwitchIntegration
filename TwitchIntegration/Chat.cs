@@ -20,7 +20,7 @@ namespace TwitchIntegration
             {
                 if (i > 0)
                 {
-                    /*msg += !msg.EndsWith("\n") ? "\n" : string.Empty;*/ msg+= "\n";
+                    msg += msg.EndsWith("\n") ? string.Empty : "\n";
                 }
                 msg += StringExtensions.WordWrap(MessageQueue.Queue.ElementAt(i).ToString(), max);
             }
@@ -30,7 +30,8 @@ namespace TwitchIntegration
             //    msg = msg.Replace("\n\n", "\n");
             //}
 
-            return msg;
+
+            return !string.IsNullOrEmpty(msg) ? msg : "Waiting for messages...";
         }
 
         public static readonly string[] FormattingTags = new string[] {

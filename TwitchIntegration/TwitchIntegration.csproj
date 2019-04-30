@@ -77,4 +77,8 @@
   <ItemGroup />
   <Import Project="..\TwitchIntegration.Shared\TwitchIntegration.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>taskkill /im Distance.exe /t /f
+exit 0</PreBuildEvent>
+  </PropertyGroup>
 </Project>

@@ -43,7 +43,7 @@ namespace TwitchIntegration.Harmony
                 logic.errorText_.enabled = true;
                 try
                 {
-                    logic.errorText_.textMesh_.text = Chat.GetMessages();
+                    logic.errorText_.textMesh_.text = Chat.GetMessages(22);
                 } catch (Exception e) {
                     Plugin.Log.Exception(e);
                 }

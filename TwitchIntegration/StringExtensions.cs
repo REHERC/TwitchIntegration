@@ -57,31 +57,35 @@ namespace TwitchIntegration
             int i = 0; // stores current position (relative)
             int i_sub = 0; // stores the total size of the tags
             int pos = 0; // stores current position (absolute)
-            int valid = 0; //stores the last valid cutting point
+            int valid = 1; //stores the last valid cutting point
             string with = ""; // the text with the tags
             string without = ""; // the text without the tags
             string temp = ""; // a temporary value to store matches from the regex
             System.Text.RegularExpressions.Group tag = null; // a temporary value to store matches from the regex
 
-            //for (i = 0; i < max;)
-            while (i <= max)
+            while (i - i_sub < max)
             {
-                if (without.Length > max)
+                pos = where + i;
+
+                if (where + with.Length > text.Length || without.Length > max)
                 {
                     break;
                 }
 
-                pos = where + i;
-
                 match = regex.Match(text.Substring(pos));
-                // if the text from i starts with a tag
-                if (match.Success && (tag = match.Groups["tag"]) != null && text.Substring(pos).StartsWith(temp = tag.Value))
+                if (match.Success)
                 {
-                    i += temp.Length;
-                    //i_sub += temp.Length;
-                    valid = i;
-                    with += temp;
-                    continue;
+                    tag = match.Groups["tag"];
+                    if (tag != null)
+                    {
+                        temp = tag.Value;
+                        i += temp.Length;
+                        i_sub += temp.Length;
+                        with += temp;
+                        valid = i;
+
+                        continue;
+                    }
                 }
                 else
                 {
@@ -95,31 +99,8 @@ namespace TwitchIntegration
                 i++;
             }
 
-            /*while (i >= 0 && !char.IsWhiteSpace(text[where + i]))
-                i--;
-            if (i < 0)
-                return max;
-            while (i >= 0 && char.IsWhiteSpace(text[where + i]))
-                i--;*/
-            //return (valid == 0 ? with.Length < max ? with.Length : max : valid + 1);
-            int ret = with.Length <= max ? with.Length : valid == 0 ? max : valid;
-            Console.WriteLine($"{with} - {ret}");
-            return ret;
-        }
-
-        private static int OldLineBreak(string text, int where, int max)
-        {
-            int i = max;
-            while (i >= 0 && !char.IsWhiteSpace(text[where + i]))
-                i--;
-
-            if (i < 0)
-                return max;
-
-            while (i >= 0 && char.IsWhiteSpace(text[where + i]))
-                i--;
-
-            return i + 1;
+            int result = valid == 0 ? max : valid;
+            return result;
         }
     }
 }
