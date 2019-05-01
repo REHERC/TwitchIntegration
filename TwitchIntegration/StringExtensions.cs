@@ -73,12 +73,8 @@ namespace TwitchIntegration
             for (i = 0; i <= end;)
             {
                 if (where + i >= text.Length - 1 || without.Length > max)
-                {
                     break;
-                }
-
                 pos = where + i;
-
                 temp = text.Substring(pos);
                 match = regex.Match(temp);
                 if (match.Success)
@@ -89,9 +85,7 @@ namespace TwitchIntegration
                         temp = tag.Value;
                         i_sub += temp.Length;
                         i += temp.Length;
-
                         with += temp;
-
                         valid = i;
                         valid_found = true;
                         continue;
@@ -107,20 +101,7 @@ namespace TwitchIntegration
                 without += chr;
                 i++;
             }
-
-            int result = 0;
-            //result = valid == -1 ? without.Length <= max ? i : max : valid;
-            //result = (without.Length <= max ? with.Length : valid == -1 ? max + i_sub : valid) + 1;
-            //result = (without.Length > max ? valid >= 0 ? valid : max + i_sub : with.Length) - 1;
-            if (without.Length < max)
-            {
-                result = with.Length + 1;
-            }
-            else
-            {
-                result = valid_found ? valid : max + i_sub;
-            }
-            return result;
+            return without.Length < max ? with.Length + 1 : valid_found ? valid : max + i_sub;
         }
     }
 }
