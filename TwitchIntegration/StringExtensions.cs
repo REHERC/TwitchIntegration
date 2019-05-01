@@ -2,6 +2,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
+#pragma warning disable IDE0059
 namespace TwitchIntegration
 {
     public static class StringExtensions
@@ -54,52 +55,68 @@ namespace TwitchIntegration
             Regex regex = new Regex(RegexPattern);
             Match match = null;
 
+            int end = text.Substring(where).IndexOf('\n');
+            if (end < 0)
+            {
+                end = text.Substring(where).Length;
+            }
             int i = 0; // stores current position (relative)
             int i_sub = 0; // stores the total size of the tags
             int pos = 0; // stores current position (absolute)
-            int valid = 1; //stores the last valid cutting point
+            int valid = -1; //stores the last valid cutting point
             string with = ""; // the text with the tags
             string without = ""; // the text without the tags
-            string temp = ""; // a temporary value to store matches from the regex
+            string temp = ""; // temporary string for holding values
             System.Text.RegularExpressions.Group tag = null; // a temporary value to store matches from the regex
 
-            while (i - i_sub < max)
+            for (i = 0; i <= end;)
             {
-                pos = where + i;
-
-                if (where + with.Length > text.Length || without.Length > max)
+                if (without.Length >= max)
+                {
+                    break;
+                }
+                if (where + i >= text.Length - 1)
                 {
                     break;
                 }
 
-                match = regex.Match(text.Substring(pos));
+                pos = where + i;
+
+                temp = text.Substring(pos);
+                match = regex.Match(temp);
                 if (match.Success)
                 {
                     tag = match.Groups["tag"];
-                    if (tag != null)
+                    if (tag != null && temp.StartsWith(tag.Value))
                     {
                         temp = tag.Value;
-                        i += temp.Length;
                         i_sub += temp.Length;
-                        with += temp;
-                        valid = i;
+                        i += temp.Length;
 
+                        with += temp;
+
+                        valid = i;
                         continue;
                     }
                 }
-                else
+                char chr = text[pos];
+                if (char.IsWhiteSpace(chr))
                 {
-                    if (char.IsWhiteSpace(text[pos]))
-                    {
-                        valid = i;
-                    }
-                    with += text[pos];
-                    without += text[pos];
+                    valid = i + 1;
                 }
+                with += chr;
+                without += chr;
                 i++;
             }
 
-            int result = valid == 0 ? max : valid;
+            if (i == end + 1)
+            {
+                valid = end;
+            }
+
+            //int result = valid == -1 ? without.Length <= max ? i : max : valid;
+            //int result = (without.Length <= max ? with.Length : valid == -1 ? max + i_sub : valid) + 1;
+            int result = (without.Length > max ? valid >= 0 ? valid : max + i_sub : with.Length);
             return result;
         }
     }

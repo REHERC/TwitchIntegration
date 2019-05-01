@@ -29,10 +29,23 @@ namespace TwitchIntegration.Host
             client_ = new TwitchClient();
             client_.Initialize(credentials_);
 
+            client_.OnDisconnected += Client__OnDisconnected;
+            client_.OnConnectionError += Client__OnConnectionError;
+
             client_.OnMessageReceived += Client__OnMessageReceived;
             client_.OnConnected += Client__OnConnected;
             client_.OnLog += Client__OnLog;
 
+            client_.Connect();
+        }
+
+        private void Client__OnConnectionError(object sender, OnConnectionErrorArgs e)
+        {
+            client_.Reconnect();
+        }
+
+        private void Client__OnDisconnected(object sender, OnDisconnectedArgs e)
+        {
             client_.Connect();
         }
 

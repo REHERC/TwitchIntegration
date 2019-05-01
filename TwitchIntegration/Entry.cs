@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Spectrum.API.Configuration;
 using Spectrum.API.Interfaces.Plugins;
 using Spectrum.API.Interfaces.Systems;
+using Spectrum.API.IPC;
 using Spectrum.API.Logging;
 using Spectrum.API.Storage;
 using System;
@@ -16,7 +17,7 @@ using TwitchIntegration.Shared;
 #pragma warning disable RCS1001
 namespace TwitchIntegration
 {
-    public class Entry : IPlugin
+    public class Entry : IPlugin, IIPCEnabled
     {
         #region Singleton
         public static Entry Instance { get; private set; }
@@ -30,6 +31,8 @@ namespace TwitchIntegration
 
         public void Initialize(IManager manager, string ipcIdentifier)
         {
+            Plugin.Manager = manager;
+            Plugin.IPCIdentifier = ipcIdentifier;
             Instance = this;
             AutoBehaviour.CreateInstance();
             #region Harmony
@@ -114,10 +117,24 @@ namespace TwitchIntegration
                 Chat.OnMessageReceived(msg);
             }
         }
+
+        public void HandleIPCData(IPCData data)
+        {
+            if (data.TryGetValue("header", out object header))
+            {
+                if ((string)header == "register")
+                {
+                    Plugin.IPCPluginList.Add(data.SourceIdentifier);
+                }
+            }
+        }
     }
 
     public static class Plugin
     {
+        public static IManager Manager;
+        public static string IPCIdentifier = "";
+        public static List<string> IPCPluginList = new List<string>();
         public static bool AppRunning = true;
         public static FileSystem Files;
         public static Settings Config;

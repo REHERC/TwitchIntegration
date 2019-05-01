@@ -1,6 +1,7 @@
 ﻿using TwitchIntegration.Shared;
 using System.Linq;
 using System;
+using Spectrum.API.IPC;
 
 namespace TwitchIntegration
 {
@@ -11,6 +12,38 @@ namespace TwitchIntegration
             MessageQueue.Queue.Enqueue(m);
             string message = $"{m.DisplayName}: {m.Message}";
             Plugin.Log.Info(message);
+            foreach (string plugin in Plugin.IPCPluginList)
+            {
+                IPCData data = new IPCData(Plugin.IPCIdentifier)
+                {
+                    { "Bits", m.Bits },
+                    { "BitsInDollars", m.BitsInDollars },
+                    { "Badges", m.Badges },
+                    { "BotUsername", m.BotUsername },
+                    { "Channel", m.Channel },
+                    { "CheerBadge", m.CheerBadge },
+                    { "Color", m.Color },
+                    { "ColorHex", m.ColorHex },
+                    { "DisplayName", m.DisplayName },
+                    { "EmoteReplacedMessage", m.EmoteReplacedMessage },
+                    { "EmoteSet", m.EmoteSet },
+                    { "Id", m.Id },
+                    { "IsBroadcaster", m.IsBroadcaster },
+                    { "IsMe", m.IsMe },
+                    { "IsModerator", m.IsModerator },
+                    { "IsSubscriber", m.IsSubscriber },
+                    { "IsTurbo", m.IsTurbo },
+                    { "Message", m.Message },
+                    { "Noisy", m.Noisy },
+                    { "RawIrcMessage", m.RawIrcMessage },
+                    { "SubscribedMonthCount", m.SubscribedMonthCount },
+                    { "UserId", m.UserId },
+                    { "Username", m.Username },
+                    { "UserType", m.UserType }
+                };
+
+                Plugin.Manager.SendIPC(plugin, data);
+            }
         }
 
         public static string GetMessages(int max = 22)
@@ -25,13 +58,13 @@ namespace TwitchIntegration
                 msg += StringExtensions.WordWrap(MessageQueue.Queue.ElementAt(i).ToString(), max);
             }
 
-            //while (msg.Contains("\n\n"))
-            //{
-            //    msg = msg.Replace("\n\n", "\n");
-            //}
+            while (msg.Contains("\n\n"))
+            {
+                msg = msg.Replace("\n\n", "\n");
+            }
 
 
-            return !string.IsNullOrEmpty(msg) ? msg : "Waiting for messages...";
+            return !string.IsNullOrEmpty(msg) ? msg : "";
         }
 
         public static readonly string[] FormattingTags = new string[] {

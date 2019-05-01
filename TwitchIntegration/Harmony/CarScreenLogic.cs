@@ -23,7 +23,7 @@ namespace TwitchIntegration.Harmony
                 logic = GetComponent<CarScreenLogic>();
             }
 
-            void Update()
+            void LateUpdate()
             {
                 foreach (CarScreenWidgetBase widget in logic.carScreenWidgets_)
                 {
@@ -36,19 +36,26 @@ namespace TwitchIntegration.Harmony
                 {
                     screensaver.SetActive(false);
                 }
+                logic.screensaverBackground_.SetActive(false);
+                logic.CarScreenSaverDisabled_ = true;
 
-                Console.Title = G.Sys.PlayerManager_.Current_.playerData_.CarCamera_.activeCameraMode_.GetType().Name;
+                string cameramode = G.Sys.PlayerManager_.Current_.playerData_.CarCamera_.activeCameraMode_.GetType().Name;
+                // CockpitCamMode
+                if (cameramode == "CockpitCamMode")
+                {
+                    logic.errorText_.textMesh_.text = Chat.GetMessages(20);
+                    logic.errorText_.textMesh_.fontSize = 18;
+                }
+                else
+                {
+                    logic.errorText_.textMesh_.text = Chat.GetMessages(22);
+                    logic.errorText_.textMesh_.fontSize = 24;
+                }
+
 
                 logic.errorText_.gameObject.SetActive(true);
                 logic.errorText_.enabled = true;
-                try
-                {
-                    logic.errorText_.textMesh_.text = Chat.GetMessages(22);
-                } catch (Exception e) {
-                    Plugin.Log.Exception(e);
-                }
                 //TODO: make font smaller
-                logic.errorText_.textMesh_.fontSize = 24;
             }
 
             public readonly string[] WidgetsFilter = new string[] {
@@ -66,7 +73,7 @@ namespace TwitchIntegration.Harmony
                 "CheatIcon",
                 "BackgroundPlane",
                 "JumpCircle",
-                "MovementLines",
+                //"MovementLines",
                 "Speedometer",
                 "TopHeatLines",
                 "WheelIndicatorBL",
