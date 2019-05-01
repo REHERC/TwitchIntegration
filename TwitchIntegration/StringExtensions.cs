@@ -63,7 +63,8 @@ namespace TwitchIntegration
             int i = 0; // stores current position (relative)
             int i_sub = 0; // stores the total size of the tags
             int pos = 0; // stores current position (absolute)
-            int valid = -1; //stores the last valid cutting point
+            bool valid_found = false;
+            int valid = 1; //stores the last valid cutting point
             string with = ""; // the text with the tags
             string without = ""; // the text without the tags
             string temp = ""; // temporary string for holding values
@@ -71,11 +72,7 @@ namespace TwitchIntegration
 
             for (i = 0; i <= end;)
             {
-                if (without.Length >= max)
-                {
-                    break;
-                }
-                if (where + i >= text.Length - 1)
+                if (where + i >= text.Length - 1 || without.Length > max)
                 {
                     break;
                 }
@@ -96,6 +93,7 @@ namespace TwitchIntegration
                         with += temp;
 
                         valid = i;
+                        valid_found = true;
                         continue;
                     }
                 }
@@ -103,20 +101,25 @@ namespace TwitchIntegration
                 if (char.IsWhiteSpace(chr))
                 {
                     valid = i + 1;
+                    valid_found = true;
                 }
                 with += chr;
                 without += chr;
                 i++;
             }
 
-            if (i == end + 1)
+            int result = 0;
+            //result = valid == -1 ? without.Length <= max ? i : max : valid;
+            //result = (without.Length <= max ? with.Length : valid == -1 ? max + i_sub : valid) + 1;
+            //result = (without.Length > max ? valid >= 0 ? valid : max + i_sub : with.Length) - 1;
+            if (without.Length < max)
             {
-                valid = end;
+                result = with.Length + 1;
             }
-
-            //int result = valid == -1 ? without.Length <= max ? i : max : valid;
-            //int result = (without.Length <= max ? with.Length : valid == -1 ? max + i_sub : valid) + 1;
-            int result = (without.Length > max ? valid >= 0 ? valid : max + i_sub : with.Length);
+            else
+            {
+                result = valid_found ? valid : max + i_sub;
+            }
             return result;
         }
     }

@@ -120,11 +120,14 @@ namespace TwitchIntegration
 
         public void HandleIPCData(IPCData data)
         {
-            if (data.TryGetValue("header", out object header))
+            if (data.TryGetValue("content/header", out object header))
             {
-                if ((string)header == "register")
+                if ((string)header == "register/request")
                 {
                     Plugin.IPCPluginList.Add(data.SourceIdentifier);
+                    Plugin.Manager.SendIPC((string)header, new IPCData(Plugin.IPCIdentifier) {
+                        { "content/header", "register/success" }
+                    });
                 }
             }
         }

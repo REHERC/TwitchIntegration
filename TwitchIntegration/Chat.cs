@@ -16,6 +16,7 @@ namespace TwitchIntegration
             {
                 IPCData data = new IPCData(Plugin.IPCIdentifier)
                 {
+                    { "content/header", "data/message" },
                     { "Bits", m.Bits },
                     { "BitsInDollars", m.BitsInDollars },
                     { "Badges", m.Badges },
