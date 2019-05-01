@@ -3,7 +3,7 @@
 ![Repository logo](repository_thumbnail.png)
 
 # Downloads
-> You can download the mod from the [Releases page](/releases/latest)
+> You can download the mod from the [Releases page]("http://www.github.com/REHERC/TwitchIntegration/releases/latest")
 
 # How to use the mod ?
 > - This section will be added in the future
