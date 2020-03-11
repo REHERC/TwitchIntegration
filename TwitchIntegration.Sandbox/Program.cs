@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿#pragma warning disable CS0169, RCS1075, RCS1102, IDE0044, SecurityIntelliSenseCS
+using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.IO;

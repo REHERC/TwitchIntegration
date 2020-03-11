@@ -2,14 +2,21 @@
 using System.Linq;
 using System;
 using Spectrum.API.IPC;
+using System.Text;
 
 namespace TwitchIntegration
 {
     public static class Chat
     {
+        const int MAX_MESSAGES = 15;
+
         public static void OnMessageReceived(ChatMessage m)
         {
             MessageQueue.Queue.Enqueue(m);
+            if (MessageQueue.Queue.Count > MAX_MESSAGES)
+            {
+                MessageQueue.Queue.Dequeue();
+            }
             string message = $"{m.DisplayName}: {m.Message}";
             Plugin.Log.Info(message);
             foreach (string plugin in Plugin.IPCPluginList)
@@ -47,10 +54,31 @@ namespace TwitchIntegration
             }
         }
 
-        public static string GetMessages(int max = 22)
+
+        public static string GetMessages(int max, int margin)
+        {
+            string messages = GetMessages(max);
+            string result = string.Empty;
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (string line in messages.Lines())
+            {
+                sb.Append(' ', margin);
+                sb.Append(line);
+                sb.Append('\n');
+            }
+
+            result = sb.ToString();
+            result = result.Substring(0, result.Length - 1);
+
+            return result;
+        }
+
+        public static string GetMessages(int max)
         {
             string msg = "";
-            for (int i = 0; i < Math.Min(15, MessageQueue.Queue.Count); i++)
+            for (int i = 0; i < Math.Min(MAX_MESSAGES, MessageQueue.Queue.Count); i++)
             {
                 if (i > 0)
                 {

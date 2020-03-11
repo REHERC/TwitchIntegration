@@ -7,7 +7,7 @@ using UnityEngine;
 namespace TwitchIntegration.Harmony
 {
     [HarmonyPatch(typeof(CarScreenLogic), "Awake")]
-    public class CarScreenLogic_Patch
+    public static class CarScreenLogic_Patch
     {
         static void Prefix(CarScreenLogic __instance)
         {
@@ -21,6 +21,11 @@ namespace TwitchIntegration.Harmony
             void Awake()
             {
                 logic = GetComponent<CarScreenLogic>();
+            }
+
+            void Update()
+            {
+                LateUpdate();
             }
 
             void LateUpdate()
@@ -37,21 +42,22 @@ namespace TwitchIntegration.Harmony
                     screensaver.SetActive(false);
                 }
                 logic.screensaverBackground_.SetActive(false);
+                logic.minimap_.SetActive(false);
+                logic.minimapLogic_.enabled = false;
                 logic.CarScreenSaverDisabled_ = true;
 
                 string cameramode = G.Sys.PlayerManager_.Current_.playerData_.CarCamera_.activeCameraMode_.GetType().Name;
-                // CockpitCamMode
+
                 if (cameramode == "CockpitCamMode")
                 {
-                    logic.errorText_.textMesh_.text = Chat.GetMessages(20);
-                    logic.errorText_.textMesh_.fontSize = 18;
+                    logic.errorText_.textMesh_.text = Chat.GetMessages(Settings.CockpitCharsPerLine, Settings.CockpitChatMargin);
+                    logic.errorText_.textMesh_.fontSize = Settings.CockpitChatFontSize;
                 }
                 else
                 {
-                    logic.errorText_.textMesh_.text = Chat.GetMessages(22);
-                    logic.errorText_.textMesh_.fontSize = 24;
+                    logic.errorText_.textMesh_.text = Chat.GetMessages(Settings.CharsPerLine);
+                    logic.errorText_.textMesh_.fontSize = Settings.ChatFontSize;
                 }
-
 
                 logic.errorText_.gameObject.SetActive(true);
                 logic.errorText_.enabled = true;

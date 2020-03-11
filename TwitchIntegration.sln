@@ -4,17 +4,39 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchIntegration", "TwitchIntegration\TwitchIntegration.csproj", "{A64A91AF-E9AD-402C-A00D-F527D7CFDD5C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3F837149-834E-4D00-8137-984E40D25CEF} = {3F837149-834E-4D00-8137-984E40D25CEF}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchIntegration.Host", "TwitchIntegration.Host\TwitchIntegration.Host.csproj", "{3F837149-834E-4D00-8137-984E40D25CEF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A825814A-91D8-48BD-82C5-A92E9867174A} = {A825814A-91D8-48BD-82C5-A92E9867174A}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "References", "References", "{DADA3015-8D80-4E8A-9DF3-EA121857C282}"
 	ProjectSection(SolutionItems) = preProject
+		References\Assembly-CSharp.dev.dll = References\Assembly-CSharp.dev.dll
+		References\Spectrum.API.dll = References\Spectrum.API.dll
 		References\TwitchLib.Unity.dll = References\TwitchLib.Unity.dll
+		References\UnityEngine.dll = References\UnityEngine.dll
+		References\UnityEngine.UI.dll = References\UnityEngine.UI.dll
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchIntegration.Sandbox", "TwitchIntegration.Sandbox\TwitchIntegration.Sandbox.csproj", "{A825814A-91D8-48BD-82C5-A92E9867174A}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TwitchIntegration.Shared", "TwitchIntegration.Shared\TwitchIntegration.Shared.shproj", "{EAC9F73D-5672-4A27-ACF0-60C431608823}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Git", "Git", "{093E4BF3-2A35-44B6-921D-293E2847DA75}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Include", "Include", "{D3E53EB2-597F-4CD8-B907-8CB3E67F7134}"
+	ProjectSection(SolutionItems) = preProject
+		Include\plugin.json = Include\plugin.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

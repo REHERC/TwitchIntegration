@@ -1,0 +1,15 @@
+{
+  "FriendlyName": "Twitch Chat Integration",
+  "Author": "Reherc",
+  "AuthorContact": "Github: @REHERC",
+  "CompatibleAPILevel": 6,
+  "IPCIdentifier": "TwitchIntegration",
+  "ModuleFileName": "TwitchIntegration.dll",
+  "EntryClassName": "Entry",
+  "Priority": 9,
+  "Dependencies": [
+    "0Harmony.dll",
+    "Newtonsoft.Json.dll"
+  ],
+  "SkipLoad": false
+}

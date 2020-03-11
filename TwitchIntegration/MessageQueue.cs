@@ -5,6 +5,6 @@ namespace TwitchIntegration
 {
     public static class MessageQueue
     {
-        public static Queue<ChatMessage> Queue = new Queue<ChatMessage>();
+        public static Queue<ChatMessage> Queue { get; set; } = new Queue<ChatMessage>();
     }
 }

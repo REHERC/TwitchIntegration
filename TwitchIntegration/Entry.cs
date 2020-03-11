@@ -1,6 +1,6 @@
 ﻿using Harmony;
 using Newtonsoft.Json;
-using Spectrum.API.Configuration;
+using Configuration = Spectrum.API.Configuration;
 using Spectrum.API.Interfaces.Plugins;
 using Spectrum.API.Interfaces.Systems;
 using Spectrum.API.IPC;
@@ -13,19 +13,22 @@ using System.IO;
 using System.Reflection;
 using System.Threading;
 using TwitchIntegration.Shared;
+using Spectrum.API.GUI.Data;
+using Spectrum.API.GUI.Controls;
 
-#pragma warning disable RCS1001
+#pragma warning disable RCS1001, SecurityIntelliSenseCS
 namespace TwitchIntegration
 {
     public class Entry : IPlugin, IIPCEnabled
     {
         #region Singleton
         public static Entry Instance { get; private set; }
+        public ProcessManager Application { get => application; set => application = value; }
         #endregion
         #region Fields
         private string Channel;
         private string Token;
-        public ProcessManager Application = new ProcessManager();
+        private ProcessManager application = new ProcessManager();
         public Process TwitchAPI;
         #endregion
 
@@ -42,14 +45,21 @@ namespace TwitchIntegration
             #region Files
             Plugin.Files = new FileSystem();
             #endregion
-            #region Config
-            Plugin.Config = new Settings("Twitch");
+            #region Plugin Settings
+            Settings.Initialize();
+            #endregion
+            #region Twitch Config
+            Plugin.Config = new Configuration.Settings("Twitch");
             foreach (KeyValuePair<string, object> item in new Dictionary<string, object>() {
                 {"Channel", ""},
                 {"Token", ""}
             })
+            {
                 if (!Plugin.Config.ContainsKey(item.Key))
+                {
                     Plugin.Config[item.Key] = item.Value;
+                }
+            }
             Plugin.Config.Save();
             #endregion
             #region Log
@@ -82,14 +92,57 @@ namespace TwitchIntegration
             {
                 string line;
                 while (Plugin.AppRunning)
+                {
                     try
                     {
                         if (!string.IsNullOrEmpty(line = TwitchAPI.StandardOutput.ReadLine()))
+                        {
                             ProcessLine(line);
+                        }
                     }
                     catch (Exception e) { Plugin.Log.Exception(e); }
+                }
             })
             { IsBackground = false }.Start();
+            #endregion
+            #region Create Settings Menu
+            manager.Menus.AddMenu(MenuDisplayMode.Both, new MenuTree("twitchintegration.main", "TWITCH CHAT SETTINGS")
+            {
+                new IntegerSlider(MenuDisplayMode.Both, "twitchintegration.main.chatfontsize", "CHAT TEXT FONT SIZE")
+                .LimitedByRange(1, 96)
+                .WithGetter(() => Settings.ChatFontSize)
+                .WithSetter((value) => Settings.ChatFontSize = value)
+                .WithDefaultValue(24)
+                .WithDescription("Sets the font size of the twitch chat on teh car screen."),
+                
+                new IntegerSlider(MenuDisplayMode.Both, "twitchintegration.main.charsperline", "CHARACTERS PER LINE")
+                .LimitedByRange(10, 200)
+                .WithGetter(() => Settings.CharsPerLine)
+                .WithSetter((value) => Settings.CharsPerLine = value)
+                .WithDefaultValue(22)
+                .WithDescription("Sets the maximum number of characters that can be displayed on a single line."),
+
+                new IntegerSlider(MenuDisplayMode.Both, "twitchintegration.main.cockpitchatfontsize", "CHAT TEXT FONT SIZE (COCKPIT VIEW)")
+                .LimitedByRange(1, 48)
+                .WithGetter(() => Settings.CockpitChatFontSize)
+                .WithSetter((value) => Settings.CockpitChatFontSize = value)
+                .WithDefaultValue(18)
+                .WithDescription("Sets the font size of the twitch chat on teh car screen when in cockpit view."),
+                
+                new IntegerSlider(MenuDisplayMode.Both, "twitchintegration.main.cockpitcharsperline", "CHARACTERS PER LINE (COCKPIT VIEW)")
+                .LimitedByRange(10, 200)
+                .WithGetter(() => Settings.CockpitCharsPerLine)
+                .WithSetter((value) => Settings.CockpitCharsPerLine = value)
+                .WithDefaultValue(20)
+                .WithDescription("Sets the maximum number of characters that can be displayed on a single line when in cockpit view."),
+
+                new IntegerSlider(MenuDisplayMode.Both, "twitchintegration.main.cockpitchatmargin", "CHAT TEXT MARGIN (COCKPIT VIEW)")
+                .LimitedByRange(0, 150)
+                .WithGetter(() => Settings.CockpitChatMargin)
+                .WithSetter((value) => Settings.CockpitChatMargin = value)
+                .WithDefaultValue(0)
+                .WithDescription("Sets space added to the left side of the chat to avoid being hidden when in cockpit view.")
+            });
             #endregion
         }
 
@@ -101,11 +154,12 @@ namespace TwitchIntegration
                 {
                     TwitchAPI.Kill();
                     TwitchAPI.WaitForExit();
-                    while (!TwitchAPI.HasExited)
-                        continue;
+                    while (!TwitchAPI.HasExited);
                 }
             }
-            catch (Exception) { }
+            catch (Exception e) { 
+                Plugin.Log.Exception(e); 
+            }
         }
 
         public void ProcessLine(string line)
@@ -140,7 +194,7 @@ namespace TwitchIntegration
         public static List<string> IPCPluginList = new List<string>();
         public static bool AppRunning = true;
         public static FileSystem Files;
-        public static Settings Config;
+        public static Configuration.Settings Config;
         public static Logger Log;
     }
 }

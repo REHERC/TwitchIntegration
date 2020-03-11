@@ -50,7 +50,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="TwitchLib.Unity">
+    <Reference Include="TwitchLib.Unity, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\References\TwitchLib.Unity.dll</HintPath>
     </Reference>
   </ItemGroup>
@@ -67,21 +68,29 @@
   <Import Project="..\TwitchIntegration.Shared\TwitchIntegration.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>EXIT 0
-SET FILE=TwitchIntegration.Host.exe
-SET WORKSPACE=%25CD%25
-SET CONFIG=$(Configuration)
-PUSHD "%25WORKSPACE%25"
-SET SOURCE="%25WORKSPACE%25\%25FILE%25"
-SET TARGET="%25WORKSPACE%25\..\..\..\TwitchIntegration.Sandbox\bin\%25CONFIG%25\%25FILE%25"
-ECHO Copying %25SOURCE%25 to %25TARGET%25
-IF EXIST %25TARGET%25 DEL %25TARGET%25 /s
-ECHO &gt;%25TARGET%25
-XCOPY /Y /K %25SOURCE%25 %25TARGET%25
-POPD</PostBuildEvent>
+    <PostBuildEvent>SET INCLUDE=$(SolutionDir)Include\
+SET BUILD=$(ProjectDir)$(OutDir)
+SET PACKAGES=$(SolutionDir)Build\Twitch Integration\
+
+CALL :MAKEDIR "%25PACKAGES%25"
+CALL :MAKEDIR "%25PACKAGES%25\Data"
+
+CALL :COPY "%25BUILD%25TwitchIntegration.Host.exe" "%25PACKAGES%25Data"
+CALL :COPY "%25BUILD%25Newtonsoft.Json.dll" "%25PACKAGES%25Data"
+CALL :COPY "%25BUILD%25TwitchLib.Unity.dll" "%25PACKAGES%25Data"
+
+EXIT 0
+
+:MAKEDIR
+IF NOT EXIST %251 MKDIR %251
+GOTO :EOF
+
+:COPY
+XCOPY /s /Y /v %251 %252
+GOTO :EOF</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>taskkill /im TwitchIntegration.Host.exe /t /f
+    <PreBuildEvent>TASKKILL /IM TwitchIntegration.Host.exe /T /F
 exit 0</PreBuildEvent>
   </PropertyGroup>
 </Project>
