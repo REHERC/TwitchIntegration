@@ -90,7 +90,7 @@ XCOPY /s /Y /v %251 %252
 GOTO :EOF</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>TASKKILL /IM TwitchIntegration.Host.exe /T /F
-exit 0</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>
