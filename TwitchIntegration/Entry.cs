@@ -16,19 +16,18 @@ using TwitchIntegration.Shared;
 using Spectrum.API.GUI.Data;
 using Spectrum.API.GUI.Controls;
 
-#pragma warning disable RCS1001, SecurityIntelliSenseCS
+#pragma warning disable RCS1001, SecurityIntelliSenseCS, CA1031, RCS1163, CA1822
 namespace TwitchIntegration
 {
     public class Entry : IPlugin, IIPCEnabled
     {
         #region Singleton
         public static Entry Instance { get; private set; }
-        public ProcessManager Application { get => application; set => application = value; }
+        public ProcessManager Application { get; set; } = new ProcessManager();
         #endregion
         #region Fields
         private string Channel;
         private string Token;
-        private ProcessManager application = new ProcessManager();
         public Process TwitchAPI;
         #endregion
 
@@ -108,15 +107,22 @@ namespace TwitchIntegration
             #region Create Settings Menu
             manager.Menus.AddMenu(MenuDisplayMode.Both, new MenuTree("twitchintegration.main", "TWITCH CHAT SETTINGS")
             {
+                new IntegerSlider(MenuDisplayMode.Both, "twitchintegration.main.maxdisplayedmessages", "DISPLAYED MESSAGES QUANTITY")
+                .LimitedByRange(1, 100)
+                .WithGetter(() => Settings.MaxdDisplayedMessages)
+                .WithSetter((value) => Settings.MaxdDisplayedMessages = value)
+                .WithDefaultValue(20)
+                .WithDescription("Sets the maximum numbers of messages that can be displaed."),
+
                 new IntegerSlider(MenuDisplayMode.Both, "twitchintegration.main.chatfontsize", "CHAT TEXT FONT SIZE")
                 .LimitedByRange(1, 96)
                 .WithGetter(() => Settings.ChatFontSize)
                 .WithSetter((value) => Settings.ChatFontSize = value)
                 .WithDefaultValue(24)
                 .WithDescription("Sets the font size of the twitch chat on teh car screen."),
-                
+
                 new IntegerSlider(MenuDisplayMode.Both, "twitchintegration.main.charsperline", "CHARACTERS PER LINE")
-                .LimitedByRange(10, 200)
+                .LimitedByRange(5, 200)
                 .WithGetter(() => Settings.CharsPerLine)
                 .WithSetter((value) => Settings.CharsPerLine = value)
                 .WithDefaultValue(22)
@@ -128,9 +134,9 @@ namespace TwitchIntegration
                 .WithSetter((value) => Settings.CockpitChatFontSize = value)
                 .WithDefaultValue(18)
                 .WithDescription("Sets the font size of the twitch chat on teh car screen when in cockpit view."),
-                
+
                 new IntegerSlider(MenuDisplayMode.Both, "twitchintegration.main.cockpitcharsperline", "CHARACTERS PER LINE (COCKPIT VIEW)")
-                .LimitedByRange(10, 200)
+                .LimitedByRange(5, 200)
                 .WithGetter(() => Settings.CockpitCharsPerLine)
                 .WithSetter((value) => Settings.CockpitCharsPerLine = value)
                 .WithDefaultValue(20)
@@ -157,8 +163,8 @@ namespace TwitchIntegration
                     while (!TwitchAPI.HasExited);
                 }
             }
-            catch (Exception e) { 
-                Plugin.Log.Exception(e); 
+            catch (Exception e) {
+                Plugin.Log.Exception(e);
             }
         }
 

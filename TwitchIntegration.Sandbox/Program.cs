@@ -1,4 +1,4 @@
-﻿#pragma warning disable CS0169, RCS1075, RCS1102, IDE0044, SecurityIntelliSenseCS
+﻿#pragma warning disable CS0169, RCS1075, RCS1102, IDE0044, SecurityIntelliSenseCS, CA1031, CA1052, IDE0051, RCS1163, RCS1213, RCS1001
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
@@ -84,7 +84,7 @@ namespace TwitchIntegration.Sandbox
         private static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
 
         private delegate bool EventHandler(CtrlType sig);
-        private static EventHandler _handler;
+        private static readonly EventHandler _handler;
 
         public enum CtrlType
         {

@@ -11,6 +11,7 @@ namespace TwitchIntegration
         {
             Config = new Configuration.Settings("Settings");
             foreach (KeyValuePair<string, object> item in new Dictionary<string, object>() {
+                {"MaxdDisplayedMessages", 20},
                 {"ChatFontSize", 24},
                 {"CharsPerLine", 22},
                 {"CockpitChatFontSize", 18},
@@ -24,6 +25,19 @@ namespace TwitchIntegration
                 }
             }
             Config.Save();
+        }
+
+        public static int MaxdDisplayedMessages
+        {
+            get
+            {
+                return Config.GetItem<int>("MaxdDisplayedMessages");
+            }
+            set
+            {
+                Config["MaxdDisplayedMessages"] = value;
+                Config.Save();
+            }
         }
 
         public static int ChatFontSize
@@ -51,7 +65,7 @@ namespace TwitchIntegration
                 Config.Save();
             }
         }
-        
+
         public static int CockpitChatFontSize
         {
             get

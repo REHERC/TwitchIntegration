@@ -1,4 +1,5 @@
-﻿using TwitchIntegration.Shared;
+﻿#pragma warning disable RCS1196, RCS1001
+using TwitchIntegration.Shared;
 using System.Linq;
 using System;
 using Spectrum.API.IPC;
@@ -8,12 +9,10 @@ namespace TwitchIntegration
 {
     public static class Chat
     {
-        const int MAX_MESSAGES = 15;
-
         public static void OnMessageReceived(ChatMessage m)
         {
             MessageQueue.Queue.Enqueue(m);
-            if (MessageQueue.Queue.Count > MAX_MESSAGES)
+            if (MessageQueue.Queue.Count > 100)
             {
                 MessageQueue.Queue.Dequeue();
             }
@@ -54,11 +53,10 @@ namespace TwitchIntegration
             }
         }
 
-
         public static string GetMessages(int max, int margin)
         {
             string messages = GetMessages(max);
-            string result = string.Empty;
+            string result;
 
             StringBuilder sb = new StringBuilder();
 
@@ -78,7 +76,7 @@ namespace TwitchIntegration
         public static string GetMessages(int max)
         {
             string msg = "";
-            for (int i = 0; i < Math.Min(MAX_MESSAGES, MessageQueue.Queue.Count); i++)
+            for (int i = Math.Max(0, MessageQueue.Queue.Count - Settings.MaxdDisplayedMessages); i < MessageQueue.Queue.Count; i++)
             {
                 if (i > 0)
                 {
@@ -91,7 +89,6 @@ namespace TwitchIntegration
             {
                 msg = msg.Replace("\n\n", "\n");
             }
-
 
             return !string.IsNullOrEmpty(msg) ? msg : "";
         }
