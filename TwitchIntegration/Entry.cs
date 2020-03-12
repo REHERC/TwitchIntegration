@@ -1,6 +1,7 @@
 ﻿using Harmony;
 using Newtonsoft.Json;
 using Configuration = Spectrum.API.Configuration;
+using Logging = Spectrum.API.Logging;
 using Spectrum.API.Interfaces.Plugins;
 using Spectrum.API.Interfaces.Systems;
 using Spectrum.API.IPC;
@@ -15,6 +16,7 @@ using System.Threading;
 using TwitchIntegration.Shared;
 using Spectrum.API.GUI.Data;
 using Spectrum.API.GUI.Controls;
+using UnityEngine;
 
 #pragma warning disable RCS1001, SecurityIntelliSenseCS, CA1031, RCS1163, CA1822
 namespace TwitchIntegration
@@ -62,7 +64,7 @@ namespace TwitchIntegration
             Plugin.Config.Save();
             #endregion
             #region Log
-            Plugin.Log = new Logger("Twitch.log")
+            Plugin.Log = new Logging.Logger("Twitch.log")
             {
                 WriteToConsole = true,
                 ColorizeLines = true
@@ -147,9 +149,21 @@ namespace TwitchIntegration
                 .WithGetter(() => Settings.CockpitChatMargin)
                 .WithSetter((value) => Settings.CockpitChatMargin = value)
                 .WithDefaultValue(0)
-                .WithDescription("Sets space added to the left side of the chat to avoid being hidden when in cockpit view.")
+                .WithDescription("Sets space added to the left side of the chat to avoid being hidden when in cockpit view."),
+
+                new ActionButton(MenuDisplayMode.Both, "twitchintegration.main.clearchat", "CLEAR CURRENT CHAT")
+                .WhenClicked(() => {
+                    MessageQueue.Queue.Clear();
+                    foreach (CarScreenLogic screen in GameObject.FindObjectsOfType<CarScreenLogic>())
+                    {
+                        MessageQueue.Reset();
+                        screen.RebootAllWidgets();
+                    }
+                })
+                .WithDescription("Clears the currently displayed messages and resets all instantiated car screens.")
             });
             #endregion
+            
         }
 
         public void CloseTwitchAPI()
@@ -201,6 +215,6 @@ namespace TwitchIntegration
         public static bool AppRunning = true;
         public static FileSystem Files;
         public static Configuration.Settings Config;
-        public static Logger Log;
+        public static Logging.Logger Log;
     }
 }

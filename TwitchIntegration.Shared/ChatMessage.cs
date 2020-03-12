@@ -51,7 +51,17 @@ namespace TwitchIntegration.Shared
 
         public int UserType;
 
-        public override string ToString() => $"<color=\"{ColorHex}\">{DisplayName}</color>: {Message}";
+        public override string ToString()
+        {
+            if (DisplayName.Length > 0)
+            {
+                return $"<color=\"{ColorHex}\">{DisplayName}</color>: {Message}";
+            } 
+            else
+            {
+                return $"<color=\"{ColorHex}\">{Message}</color>";
+            }
+        }
     }
 }
 #endif
